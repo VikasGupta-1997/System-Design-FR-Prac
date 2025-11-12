@@ -1,0 +1,4 @@
+sudo lsof -i :5173 - checkif port is in use
+docker ps - check what if portis in use then binded with which docker conatainer
+docker stop  container-name
+docker rm container-name
