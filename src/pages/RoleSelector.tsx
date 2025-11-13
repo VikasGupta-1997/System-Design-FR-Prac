@@ -27,7 +27,6 @@ export default function RoleSelector() {
           <Heading size="lg">Select Role</Heading>
           <Text color="fg.muted">Choose how you want to sign in</Text>
         </Stack>
-
         <Card.Root>
           <Card.Body>
             <Stack gap={3}>
