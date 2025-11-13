@@ -1,34 +1,31 @@
-// src/pages/AuthCallback.tsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/context/AuthContext";
+import { Center, Spinner, Text } from "@chakra-ui/react";
 
 export default function AuthCallback() {
     const navigate = useNavigate();
+    const { loadUser } = useAuthContext();
 
     useEffect(() => {
-        async function checkAuth() {
+        async function finalizeLogin() {
             try {
-                const res = await fetch("http://localhost:8000/api/v1/auth/me", {
-                    credentials: "include",
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    console.log("✅ Logged in as user:", data.userId);
-                    // Redirect user to dashboard or homepage
-                    navigate("/dashboard");
-                } else {
-                    console.warn("⚠️ No session found, redirecting to login...");
-                    navigate("/login/user");
-                }
+                const res = await loadUser();
+                // If /me succeeded → user is logged in
+                navigate("/dashboard");
             } catch (err) {
-                console.error("Session check failed:", err);
+                console.error("OAuth callback failed:", err);
                 navigate("/login/user");
             }
         }
 
-        checkAuth();
-    }, [navigate]);
+        finalizeLogin();
+    }, [loadUser, navigate]);
 
-    return <p>Authenticating... please wait</p>;
+    return (
+        <Center h="80vh" flexDir="column" gap={3}>
+            <Spinner size="lg" />
+            <Text>Authenticating... please wait</Text>
+        </Center>
+    );
 }

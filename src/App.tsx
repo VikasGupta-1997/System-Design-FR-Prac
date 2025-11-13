@@ -18,6 +18,7 @@ import ServiceAccounts from "./pages/login/ServiceAccounts"
 import CentralSSO from "./pages/login/CentralSSO"
 import AuthCallback from "./pages/AuthCallback"
 import Dashboard from "./pages/Dashboard"
+import ProtectedRoute from "./components/ui/ProtectedRoute"
 
 const App = () => {
   return (
@@ -45,7 +46,11 @@ const App = () => {
           <Route path="/login/service" element={<ServiceAccounts />} />
           <Route path="/login/sso" element={<CentralSSO />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
           <Route path="*" element={<RoleSelector />} />
         </Routes>
       </Container>

@@ -1,9 +1,11 @@
-import { logout } from '@/api'
+import { useAuthContext } from '@/context/AuthContext'
 import { Button, Text } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
     const navigate = useNavigate()
+    const { logout } = useAuthContext();
+
     const logOut = async () => {
         await logout()
         navigate('/login/user')

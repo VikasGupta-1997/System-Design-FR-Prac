@@ -5,13 +5,16 @@ import App from './App.tsx'
 import { Provider } from "@/components/ui/provider"
 import { DarkMode, LightMode, useColorMode } from "@/components/ui/color-mode"
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider defaultTheme="light" enableSystem={false}>
       <BrowserRouter>
-        <ModeBridge />
+        <AuthProvider>
+          <ModeBridge />
+        </AuthProvider>
       </BrowserRouter>
     </Provider>
   </StrictMode>,

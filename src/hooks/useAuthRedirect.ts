@@ -1,26 +1,58 @@
-// src/hooks/useAuthRedirect.ts
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
 
-export function useAuthRedirect() {
-    const navigate = useNavigate();
+// You can set API base URL in .env or import it from your api config
+const API = "http://localhost:8000";
 
-    useEffect(() => {
-        async function checkLogin() {
-            try {
-                const res = await fetch("http://localhost:8000/api/v1/auth/me", {
-                    credentials: "include",
-                });
+export function useAuth() {
+    const [user, setUser] = useState(null);
+    const [checking, setChecking] = useState(true);
 
-                if (res.ok) {
-                    // ✅ Logged in — redirect away from login
-                    navigate("/dashboard");
-                }
-            } catch (err) {
-                console.error("Auth check failed:", err);
+    // Load current session user
+    const loadUser = useCallback(async () => {
+        try {
+            const res = await fetch(`${API}/api/v1/auth/me`, {
+                credentials: "include",
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setUser(data);
+            } else {
+                setUser(null);
             }
+        } catch (err) {
+            console.error("Auth check failed:", err);
+            setUser(null);
+        } finally {
+            setChecking(false);
         }
+    }, []);
 
-        checkLogin();
-    }, [navigate]);
+    // Call on mount
+    useEffect(() => {
+        loadUser();
+    }, [loadUser]);
+
+    // ✅ Updated logout
+    const logout = useCallback(async () => {
+        try {
+            // Get CSRF first
+            const csrfRes = await fetch(`${API}/api/v1/auth/csrf`, {
+                credentials: "include",
+            });
+            const { csrfToken } = await csrfRes.json();
+
+            // Call logout
+            await fetch(`${API}/api/v1/auth/logout`, {
+                method: "GET",
+                headers: { "x-csrf-token": csrfToken },
+                credentials: "include",
+            });
+        } catch (err) {
+            console.error("Logout failed:", err);
+        } finally {
+            setUser(null);
+        }
+    }, []);
+
+    return { user, checking, loadUser, logout, isAuthenticated: !!user };
 }
