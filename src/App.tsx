@@ -18,7 +18,7 @@ import ServiceAccounts from "./pages/login/ServiceAccounts"
 import CentralSSO from "./pages/login/CentralSSO"
 import AuthCallback from "./pages/AuthCallback"
 import Dashboard from "./pages/Dashboard"
-import ProtectedRoute from "./components/ui/ProtectedRoute"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 const App = () => {
   return (

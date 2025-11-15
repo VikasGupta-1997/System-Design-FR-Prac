@@ -16,14 +16,47 @@ export function useAuth() {
             if (res.ok) {
                 const data = await res.json();
                 setUser(data);
-            } else {
-                setUser(null);
+                return data
             }
+            if (res.status === 401) {
+                console.warn("Access session expired, trying refresh...");
+                const refreshed = await refreshSession();
+                if (refreshed) {
+                    const retry = await fetch(`${API}/api/v1/auth/me`, {
+                        credentials: "include",
+                    });
+                    if (retry.ok) {
+                        const data = await retry.json();
+                        setUser(data);
+                        return data;
+                    }
+                }
+            }
+            setUser(null);
         } catch (err) {
             console.error("Auth check failed:", err);
             setUser(null);
         } finally {
             setChecking(false);
+        }
+    }, []);
+
+    const refreshSession = useCallback(async () => {
+        try {
+            const res = await fetch(`${API}/api/v1/auth/refresh`, {
+                method: "POST",
+                credentials: "include",
+            });
+            if (res.ok) {
+                console.log("🔁 Session refreshed successfully");
+                return true;
+            } else {
+                console.warn("⚠️ Refresh failed");
+                return false;
+            }
+        } catch (err) {
+            console.error("Refresh error:", err);
+            return false;
         }
     }, []);
 

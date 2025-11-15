@@ -10,7 +10,7 @@ export default function AuthCallback() {
     useEffect(() => {
         async function finalizeLogin() {
             try {
-                const res = await loadUser();
+                await loadUser();
                 // If /me succeeded → user is logged in
                 navigate("/dashboard");
             } catch (err) {
