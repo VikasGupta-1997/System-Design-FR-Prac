@@ -19,11 +19,9 @@ export default function UserLogin() {
   }, [user, navigate]);
 
   const handleLogin = async () => {
-    console.log("State", state)
     const data = await loginEmail(state.email, state.password)
-    console.log("Datta", data)
     if (data.ok) {
-      await loadUser();
+      const data = await loadUser();
       navigate('/dashboard')
     }
   }
