@@ -61,5 +61,6 @@ export async function me() {
 }
 
 export function startOAuth(provider: 'google' | 'github') {
-    window.location.href = `${API}/api/v1/auth/oauth/${provider}`;
+    // window.location.href = `${API}/api/v1/auth/oauth/${provider}`;
+    window.location.href = `${API}/api/v1/auth/oidc/${provider}`;
 }
