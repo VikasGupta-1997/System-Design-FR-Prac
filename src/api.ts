@@ -1,9 +1,18 @@
 const API = "http://localhost:8000" // e.g. http://localhost:4000
 
+const KEYCLOAK_BASE = "http://localhost:4000/realms/master";
+
 async function getCsrf() {
     const r = await fetch(`${API}/api/v1/auth/csrf`, { credentials: 'include' });
     const j = await r.json();
     return j.csrfToken as string;
+}
+
+export async function redirectToLogin() {
+    const r = await fetch(`${API}/api/v1/auth/keycloak/login`);
+    const { loginUrl } = await r.json();
+
+    window.location.href = loginUrl;
 }
 
 export async function registerEmail(email: string, password: string, username?: string) {
@@ -34,9 +43,9 @@ export async function updateBio(bio: string) {
     const csrf = await getCsrf();
     const r = await fetch(`${API}/api/v1/auth/update-bio`, {
         method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json', 
-            'x-csrf-token': csrf 
+        headers: {
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrf
         },
         credentials: 'include',
         body: JSON.stringify({ bio }),

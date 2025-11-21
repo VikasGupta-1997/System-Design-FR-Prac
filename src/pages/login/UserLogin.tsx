@@ -1,6 +1,6 @@
 import { Button, Card, Link, Container, Fieldset, Heading, HStack, Input, Separator, Stack, Text } from "@chakra-ui/react"
 import { FaGithub, FaGoogle } from "react-icons/fa6"
-import { loginEmail, registerEmail, startOAuth } from '../../api';
+import { loginEmail, redirectToLogin, registerEmail, startOAuth } from '../../api';
 // import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
@@ -53,6 +53,12 @@ export default function UserLogin() {
               </HStack>
 
               <Stack gap={3}>
+              <Button onClick={redirectToLogin} variant="outline" size="lg">
+                  <HStack>
+                    <Text>Keycloack Login</Text>
+                  </HStack>
+                </Button>
+
                 <Button onClick={() => startOAuth('google')} variant="outline" size="lg">
                   <HStack>
                     <FaGoogle />
